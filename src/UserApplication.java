@@ -4,37 +4,62 @@ import ithakimodem.*;
 import java.io.File;
 import java.util.Scanner;
 
-import javax.swing.plaf.TreeUI;
-
 class UserApplication {
   public static void main(String[] args) {
-    UserApplication.printWelcome();
-    UserApplication.helloModem(20_000, 2_000);
+    printWelcome();
+
+    Modem modem = new Modem();
+    int speed = 80_000, timeout = 2_000;
+    setupModem(modem, speed, timeout);
+    startModem(modem, false);
+
+    // Request codes
+
+    String echoCode = "E5365\r";
+    String imageWithErrorCode = "E0680\r";
+    String imageNoErrorCode = "G4703\r";
+    String gpsCode = "E0680\r";
+    String ackCode = "\r";
+    String nackCode = "\r";
+
+    // applications
+
+    // int numPackets = 5;
+    // Echo.time(modem, echoCode, numPackets);
+
+    Image.get(modem, imageNoErrorCode);
+
+    // testModem(modem);
+
+    System.out.println();
+    modem.close();
   }
 
-  private static void helloModem(int speed, int timeout) {
-    Modem modem = new Modem();
-    modem.setSpeed(speed);
-    modem.setTimeout(timeout);
+  /**
+   * Read the welcome screen when opening the virtual modem
+   *
+   * @param modem The virtual opened modem
+   * @param isPrinted Print the returned message to stdout
+   */
+  private static void startModem(Modem modem, boolean isPrinted) {
+    final int finishReadingFlag = -1;
 
-    modem.open("ithaki");
-    //boolean status = modem.write("E8448\n".getBytes());
-    //if (status == true) System.out.println("Write buffer unavailable");
-
-    final int finishReadingInt = -1;
     int returnValueModem, finishCounter = 0;
+    char returnCharModem = ' ';
     char[] finishReadingString = {'\r', '\n', '\n', '\n'};
 
-    for (;;) {
+    while (true) {
       try {
         returnValueModem = modem.read();
-        char returnCharModem = (char)returnValueModem;
+        returnCharModem = (char)returnValueModem;
 
-        System.out.print(returnCharModem);
-        Thread.sleep(100);
+        if (isPrinted) {
+          System.out.print(returnCharModem);
+          Thread.sleep(10);
+        }
 
-        // check for breaking return code -1
-        // if (returnValueModem == finishReadingInt) break;
+        // check for breaking flag
+        // if (returnValueModem == finishReadingFlag) break;
 
         // check for breaking sequence
         if ((returnCharModem == finishReadingString[finishCounter])) {
@@ -43,14 +68,45 @@ class UserApplication {
             break;
         } else
           finishCounter = 0;
+
       } catch (Exception x) {
         System.out.println(x);
         break;
       }
     }
-    modem.close();
   }
 
+  /**
+   * Configure modem parameters
+   *
+   * @param modem The virtual opened modem
+   * @param speed The data speed of the communication
+   * @param timeout The time interval waiting for message
+   */
+  private static void setupModem(Modem modem, int speed, int timeout) {
+    modem.setSpeed(speed);
+    modem.setTimeout(timeout);
+    modem.open("ithaki");
+  }
+
+  /**
+   * Send "TEST" code and print output
+   *
+   * @param modem The virtual opened modem
+   */
+  private static void testModem(Modem modem) {
+    modem.write("TEST\r".getBytes());
+    while (true) {
+      int returnMessage = modem.read();
+      System.out.print((char)returnMessage);
+      if (returnMessage == -1)
+        break;
+    }
+  }
+
+  /**
+   * Print welcome ASCII text
+   */
   private static void printWelcome() {
     try {
       Scanner welcome = new Scanner(new File("welcome.txt"));
