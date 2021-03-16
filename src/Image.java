@@ -5,22 +5,28 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class Image {
+  /**
+   * Create image file. The breaking flag to stop reading is the delimiter
+   * "0xFFD9"
+   *
+   * @param modem The virtual opened modem
+   * @param code Image request code
+   */
   public static void get(Modem modem, String code) {
     System.out.println("Image application");
 
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     int returnValueModem = 0;
     byte first, second;
-
     long tic = System.currentTimeMillis();
 
     modem.write(code.getBytes());
+    returnValueModem = modem.read();
+    first = int0(returnValueModem);
+    buffer.write(first);
+
     while (true) {
       try {
-        returnValueModem = modem.read();
-        first = int0(returnValueModem);
-        buffer.write(first);
-
         returnValueModem = modem.read();
         second = int0(returnValueModem);
         buffer.write(second);
@@ -31,6 +37,9 @@ public class Image {
         if ((String.format("%02X", first).equals("FF")) &&
             (String.format("%02X", second)).equals("D9"))
           break;
+
+        first = second;
+
       } catch (Exception x) {
         System.out.println(x);
       }
@@ -48,7 +57,7 @@ public class Image {
 
     long toc = System.currentTimeMillis();
     System.out.print("Total time creating image: " + (toc - tic) / 1000.0 +
-                     " (s)");
+                     " (s)\n");
   }
 
   /**

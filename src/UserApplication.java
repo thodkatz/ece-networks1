@@ -15,23 +15,35 @@ class UserApplication {
 
     // Request codes
 
-    String echoCode = "E5365\r";
-    String imageWithErrorCode = "E0680\r";
-    String imageNoErrorCode = "G4703\r";
-    String gpsCode = "E0680\r";
-    String ackCode = "\r";
-    String nackCode = "\r";
+    String echoCode = "E4093\r";
+    String imageNoErrorCode = "M9420\r";
+    String imageWithErrorCode = "G8706\r";
+    String gpsCode = "P8315\r";
+    String ackCode = "Q7620\r";
+    String nackCode = "R1577\r";
 
     // applications
 
-    // int numPackets = 5;
-    // Echo.time(modem, echoCode, numPackets);
+    int numPackets = 5;
+    for (int i = 0; i < numPackets; i++) {
+      System.out.print("Packet No" + i + ": ");
 
-    Image.get(modem, imageNoErrorCode);
+      long tic = System.currentTimeMillis();
+      Echo.pstop(modem, echoCode);
+      long toc = System.currentTimeMillis();
+
+      System.out.println("Total time: " + (toc - tic) / 1000.0 + " (s)\n");
+    }
+
+    // Echo.generic(modem, echoCode);
+    // Echo.generic(modem, gpsCode);
+    // Echo.generic(modem, ackCode);
+    // Echo.generic(modem, nackCode);
+    // Image.get(modem, imageNoErrorCode);
+    Image.get(modem, imageWithErrorCode);
 
     // testModem(modem);
 
-    System.out.println();
     modem.close();
   }
 

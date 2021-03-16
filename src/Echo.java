@@ -4,37 +4,71 @@ import ithakimodem.*;
 public class Echo {
 
   /**
-   * Echo packet contain time info
+   * Echo packet contain info dependent of the request code.
+   *
+   * Stop communication when detect "PSTOP"
    *
    * @param modem The virtual opened modem
-   * @param numPackets The requested number of echo time packets
+   * @param code Echo request code
    */
-  public static void time(Modem modem, String code, int numPackets) {
-    System.out.print("Echo application");
+  public static void pstop(Modem modem, String code) {
+    // System.out.println("Echo application");
 
+    char first, second = ' ';
+
+    modem.write(code.getBytes());
+    first = (char)modem.read();
+    System.out.print(first);
+
+    while (true) {
+      try {
+        second = (char)modem.read();
+        System.out.print(second);
+        Thread.sleep(10);
+
+        // all the echo packets ends to "PSTOP"
+        // check if message ending "OP" (cheat yep) to avoid waiting for
+        // breaking -1 that lags the communication
+        if (first == 'O' && second == 'P')
+          break;
+
+        first = second;
+
+      } catch (Exception x) {
+        System.out.println(x);
+      }
+    }
+    System.out.println();
+  }
+
+  /**
+   * Stop communication when -1 returns
+   *
+   * @param modem
+   * @param code
+   */
+  public static void generic(Modem modem, String code) {
     final int finishReadingFlag = -1;
 
     int returnValueModem = 0;
     char returnCharModem = ' ';
 
-    for (int i = 0; i < numPackets; i++) {
-      modem.write(code.getBytes());
-      while (true) {
-        try {
-          returnValueModem = modem.read();
-          returnCharModem = (char)returnValueModem;
+    modem.write(code.getBytes());
+    while (true) {
+      try {
+        returnValueModem = modem.read();
+        returnCharModem = (char)returnValueModem;
 
-          System.out.print(returnCharModem);
-          Thread.sleep(10);
+        System.out.print(returnCharModem);
+        Thread.sleep(10);
 
-          // check for breaking flag
-          if (returnValueModem == finishReadingFlag)
-            break;
-        } catch (Exception x) {
-          System.out.println(x);
-        }
+        // check for breaking flag
+        if (returnValueModem == finishReadingFlag)
+          break;
+      } catch (Exception x) {
+        System.out.println(x);
       }
-      System.out.println();
     }
+    System.out.println();
   }
 }
