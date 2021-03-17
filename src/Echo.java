@@ -24,7 +24,6 @@ public class Echo {
       try {
         second = (char)modem.read();
         System.out.print(second);
-        Thread.sleep(10);
 
         // all the echo packets ends to "PSTOP"
         // check if message ending "OP" (cheat yep) to avoid waiting for
@@ -60,7 +59,6 @@ public class Echo {
         returnCharModem = (char)returnValueModem;
 
         System.out.print(returnCharModem);
-        Thread.sleep(10);
 
         // check for breaking flag
         if (returnValueModem == finishReadingFlag)
@@ -70,5 +68,17 @@ public class Echo {
       }
     }
     System.out.println();
+  }
+
+  public static void pstopRepeat(Modem modem, String code, int numPackets) {
+    for (int i = 0; i < numPackets; i++) {
+      System.out.print("Packet No" + i + ": ");
+
+      long tic = System.currentTimeMillis();
+      Echo.pstop(modem, code);
+      long toc = System.currentTimeMillis();
+
+      System.out.println("Total time: " + (toc - tic) / 1000.0 + " (s)\n");
+    }
   }
 }

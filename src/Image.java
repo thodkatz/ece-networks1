@@ -13,7 +13,7 @@ public class Image {
    * @param code Image request code
    */
   public static void get(Modem modem, String code) {
-    System.out.println("Image application");
+    System.out.println("\nImage application");
 
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     int returnValueModem = 0;

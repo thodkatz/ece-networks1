@@ -2,11 +2,12 @@ package src;
 
 import ithakimodem.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 class UserApplication {
   public static void main(String[] args) {
-    printWelcome();
+    // printWelcome();
 
     Modem modem = new Modem();
     int speed = 80_000, timeout = 2_000;
@@ -15,34 +16,35 @@ class UserApplication {
 
     // Request codes
 
-    String echoCode = "E4093\r";
-    String imageNoErrorCode = "M9420\r";
-    String imageWithErrorCode = "G8706\r";
-    String gpsCode = "P8315\r";
-    String ackCode = "Q7620\r";
-    String nackCode = "R1577\r";
+    String echoCode = "E524\r";
+    String imageNoErrorCode = "M4963\r";
+    String imageWithErrorCode = "G3664=PTZ\r";
+    String gpsCode = "P3560";
+    String gpsCodeComplete = gpsCode + "R=4000106\r";
+    String ackCode = "Q3219\r";
+    String nackCode = "R3905\r";
+
 
     // applications
 
-    int numPackets = 5;
-    for (int i = 0; i < numPackets; i++) {
-      System.out.print("Packet No" + i + ": ");
-
-      long tic = System.currentTimeMillis();
-      Echo.pstop(modem, echoCode);
-      long toc = System.currentTimeMillis();
-
-      System.out.println("Total time: " + (toc - tic) / 1000.0 + " (s)\n");
-    }
+    // int numPackets = 5;
+    // Echo.pstopRepeat(modem, echoCode, numPackets);
 
     // Echo.generic(modem, echoCode);
-    // Echo.generic(modem, gpsCode);
+
+    // Echo.generic(modem, gpsCode + "\r");
+    // Echo.generic(modem, gpsCode + "R=100011" + "\r");
+
+    // GPS.parser(modem, gpsCode + "\r");
+    GPS.stringDataPoints(modem, gpsCodeComplete, 2);
+
     // Echo.generic(modem, ackCode);
     // Echo.generic(modem, nackCode);
-    // Image.get(modem, imageNoErrorCode);
-    Image.get(modem, imageWithErrorCode);
 
-    // testModem(modem);
+    // Image.get(modem, imageNoErrorCode);
+    // Image.get(modem, imageWithErrorCode);
+    // Image.get(modem, gpsCode + "T=4037512257"
+    //                          + "\r");
 
     modem.close();
   }
