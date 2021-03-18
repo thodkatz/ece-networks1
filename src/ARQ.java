@@ -8,7 +8,7 @@ public class ARQ {
     Integer xorResult = 0, fcs = 0;
 
     String message = Echo.pstop(modem, ackCode);
-    System.out.println(message);
+    System.out.println("ACK:  " + message);
     Integer counter = 0;
 
     while (true) {
@@ -23,7 +23,7 @@ public class ARQ {
 
       if (xorResult != fcs) {
         message = Echo.pstop(modem, nackCode);
-        System.out.println(message);
+        System.out.println("NACK: " + message);
         counter += 1;
       } else {
         break;

@@ -26,8 +26,8 @@ class UserApplication {
 
     // applications
 
-    int numPackets = 10;
-    // Echo.pstopRepeat(modem, echoCode, numPackets);
+    int numPackets = 20;
+    Echo.pstopRepeat(modem, echoCode, numPackets);
 
     // Echo.generic(modem, echoCode);
 
@@ -35,8 +35,8 @@ class UserApplication {
     // Echo.generic(modem, gpsCode + "R=100011" + "\r");
 
     // GPS.parser(modem, gpsCode + "\r");
-    String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete, 2);
-    System.out.println("The GPS parameter " + maps_query);
+    // String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete, 2);
+    // System.out.println("The GPS parameter " + maps_query);
     // Image.get(modem, gpsCode + "T=225735403737T=225735403736T=225734403736T=225734403737T=225733403738T=225731403738" + "\r");
     // Image.get(modem, gpsCode + maps_query + "\r");
     

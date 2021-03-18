@@ -1,5 +1,8 @@
 package src;
 import ithakimodem.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Echo {
 
@@ -14,29 +17,34 @@ public class Echo {
   public static String pstop(Modem modem, String code) {
     // System.out.println("Echo application");
 
-    char first, second = ' ';
+    char returnModem = ' ';
     String message = "";
+    Queue<Character> breakingChars = new LinkedList<>();
 
     modem.write(code.getBytes());
-    first = (char)modem.read();
-    message += first;
-    
+
     while (true) {
       try {
-        second = (char)modem.read();
-        message += second;
 
         // all the echo packets ends to "PSTOP"
-        // check if message ending "OP" (cheat yep) to avoid waiting for
-        // breaking -1 that lags the communication
-        if (first == 'O' && second == 'P')
-          break;
-
-        first = second;
-
+        if (breakingChars.size() != 5) {
+          returnModem = (char)modem.read();
+          breakingChars.add(returnModem);
+        } else {
+          String breakingString = queueChar2String(breakingChars);
+          if (breakingString.equals("PSTOP"))
+            break;
+          else {
+            breakingChars.remove();
+            returnModem = (char)modem.read();
+            breakingChars.add(returnModem);
+          }
+        }
       } catch (Exception x) {
         System.out.println(x);
       }
+
+      message += returnModem;
     }
 
     return message;
@@ -77,10 +85,19 @@ public class Echo {
       System.out.print("Packet No" + i + ": ");
 
       long tic = System.currentTimeMillis();
-      Echo.pstop(modem, code);
+      String message = Echo.pstop(modem, code);
+      System.out.println(message);
       long toc = System.currentTimeMillis();
 
       System.out.println("Total time: " + (toc - tic) / 1000.0 + " (s)\n");
     }
+  }
+
+  private static String queueChar2String(Queue<Character> queue) {
+    String message = "";
+    for (Character character : queue) {
+      message += character;
+    }
+    return message;
   }
 }
