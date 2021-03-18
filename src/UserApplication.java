@@ -16,14 +16,13 @@ class UserApplication {
 
     // Request codes
 
-    String echoCode = "E524\r";
-    String imageNoErrorCode = "M4963\r";
-    String imageWithErrorCode = "G3664=PTZ\r";
-    String gpsCode = "P3560";
-    String gpsCodeComplete = gpsCode + "R=4000106\r";
-    String ackCode = "Q3219\r";
-    String nackCode = "R3905\r";
-
+    String echoCode = "E8779\r";
+    String imageNoErrorCode = "M5849\r";
+    String imageWithErrorCode = "G2640=PTZ\r";
+    String gpsCode = "P1678";
+    String gpsCodeComplete = gpsCode + "R=6000199\r";
+    String ackCode = "Q7087\r";
+    String nackCode = "R1556\r";
 
     // applications
 
@@ -36,15 +35,16 @@ class UserApplication {
     // Echo.generic(modem, gpsCode + "R=100011" + "\r");
 
     // GPS.parser(modem, gpsCode + "\r");
-    GPS.stringDataPoints(modem, gpsCodeComplete, 2);
-
+    String maps_query = GPS.stringDataPoints(modem, gpsCodeComplete, 2);
+    System.out.println(maps_query);
+    // Image.get(modem, gpsCode + "T=225735403737T=225735403736T=225734403736T=225734403737T=225733403738T=225731403738" + "\r");
+    Image.get(modem, gpsCode + maps_query + "\r");
+    
     // Echo.generic(modem, ackCode);
     // Echo.generic(modem, nackCode);
 
     // Image.get(modem, imageNoErrorCode);
     // Image.get(modem, imageWithErrorCode);
-    // Image.get(modem, gpsCode + "T=4037512257"
-    //                          + "\r");
 
     modem.close();
   }

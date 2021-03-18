@@ -1,7 +1,10 @@
 package src;
 
 import ithakimodem.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GPS {
   private static ArrayList<String> parser(Modem modem, String code) {
@@ -11,7 +14,7 @@ public class GPS {
     while (true) {
       try {
         String line = returnLine(modem);
-        System.out.println(line);
+        // System.out.println(line);
 
         // check for breaking flag
         if (line.equals("STOP ITHAKI GPS TRACKING\r"))
@@ -39,41 +42,83 @@ public class GPS {
    */
   public static String stringDataPoints(Modem modem, String code,
                                         int numPoints) {
-    String mergeDataPoints = "";
+    String finalPoints = "";
     String[] adjust_coords = {"", ""};
 
     // coordinates: time, latitude, longitude
     ArrayList<String> coordinates = new ArrayList<String>();
+    // filtered: merge latitude and longitude
+    ArrayList<String> filteredCoords = new ArrayList<String>();
+
     coordinates = parser(modem, code);
-    System.out.println(coordinates);
 
-    // adjust to minutes
     for (int i = 0; i < coordinates.size(); i++) {
-      if (i % 3 == 0) {
-        mergeDataPoints += "T";
-      }
       if (!(i % 3 == 0)) {
+        // adjust to degrees, minutes, seconds
+
         String lat_long = coordinates.get(i);
-        String[] intAndDecimal = lat_long.split("\\.");
-        
-        int intPart = Integer.parseInt(i%2==1 ? intAndDecimal[0].substring(0,2) : intAndDecimal[0].substring(0,3));
-        Float floatPart = Float.parseFloat(intAndDecimal[1]);
 
-        String hour = String.valueOf(intPart);
-        String minute = String.valueOf(floatPart * 0.6f);
-        minute = minute.substring(0, 2);
+        String hour =
+            i % 3 == 1 ? lat_long.substring(0, 2) : lat_long.substring(1, 3);
 
-        adjust_coords[i % 3 - 1] = hour + minute;
+        String minutes = i % 3 == 1 ? lat_long.substring(2, lat_long.length())
+                                    : lat_long.substring(3, lat_long.length());
+        minutes = String.valueOf(Float.parseFloat(minutes));
+        int intPart = Integer.parseInt(minutes.split("\\.")[0]);
+        float decimalPart = Float.parseFloat("0." + minutes.split("\\.")[1]);
+        minutes = String.valueOf(intPart);
+
+        String seconds = String.valueOf(decimalPart * 60f);
+        seconds = seconds.substring(0, 2);
+
+        adjust_coords[i % 3 - 1] = hour + minutes + seconds;
       }
-      if (i % 3 == 0) {
+      if (i % 3 == 2) {
         // first store the longitude and after the latitude
-        mergeDataPoints += adjust_coords[1];
-        mergeDataPoints += adjust_coords[0];
+        filteredCoords.add("T=" + adjust_coords[1] + adjust_coords[0]);
       }
     }
 
-    System.out.println(mergeDataPoints);
-    return mergeDataPoints;
+    // keep track of the indices to find the timestamps of the unique data
+    // points
+    ArrayList<Integer> indices = new ArrayList<Integer>();
+    finalPoints = findUniqueDataPoints(filteredCoords, indices);
+
+    ArrayList<String> timestamps = new ArrayList<String>();
+    for (Integer i : indices) {
+      timestamps.add(coordinates.get(i * 3));
+    }
+    System.out.println(timestamps);
+
+    return finalPoints;
+  }
+
+  /**
+   * Find different GPS points based on latitude and longitude
+   *
+   * @param coordinates Format T=AABBCCDDEEFF longitude and latitude in hourse,
+   *     minutes, seconds
+   * @return
+   */
+  private static String findUniqueDataPoints(ArrayList<String> coordinates,
+                                             ArrayList<Integer> indices) {
+    ArrayList<String> filtered = new ArrayList<String>();
+    int lengthSamples = Math.min(4, coordinates.size());
+    String parsedString = "";
+
+    // exclude "T=" and find unique data points
+    for (int i = 0; i < coordinates.size(); i++)  {
+      if (!filtered.contains(coordinates.get(i))) {
+        filtered.add(coordinates.get(i));
+        indices.add(i);
+      }
+    }
+
+    for (int i = 0; i < filtered.size(); i++) {
+      parsedString += filtered.get(i);
+    }
+
+    return parsedString;
   }
 
   private static String returnLine(Modem modem) {
