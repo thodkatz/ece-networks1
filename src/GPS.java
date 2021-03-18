@@ -1,10 +1,9 @@
 package src;
 
 import ithakimodem.*;
-import java.lang.reflect.Array;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class GPS {
   private static ArrayList<String> parser(Modem modem, String code) {
@@ -87,7 +86,14 @@ public class GPS {
     for (Integer i : indices) {
       timestamps.add(coordinates.get(i * 3));
     }
-    // System.out.println(timestamps);
+
+    try (FileWriter time = new FileWriter(new File("logs/gps_timstamps"))) {
+      for (String string : timestamps) {
+        time.write(string + "\n");
+      }
+    } catch (Exception x) {
+      System.out.println(x);
+    }
 
     return finalPoints;
   }
@@ -138,4 +144,5 @@ public class GPS {
 
     return line;
   }
+
 }

@@ -17,14 +17,18 @@ class UserApplication {
 
     // Request codes
 
-    String echoCode = "E3346";
-    String imageNoErrorCode = "M2743";
-    String imageWithErrorCode = "G1890";
-    String gpsCode = "P4031";
-    String gpsCodeComplete = gpsCode + "R=6000199";
-    String ackCode = "Q6886";
-    String nackCode = "R9981";
+    String echoCode = "E3634";
+    String imageNoErrorCode = "M6645";
+    String imageWithErrorCode = "G9639";
+    String gpsCode = "P1604";
+    String gpsCodeComplete = gpsCode + "R=1000099";
+    String ackCode = "Q4029";
+    String nackCode = "R1128";
 
+    String cameraSuffix = "CAM=FIX";
+    String directionSuffix = "DIR=L";
+    imageNoErrorCode += cameraSuffix;
+    imageWithErrorCode += cameraSuffix;
     String enter = "\r";
 
     // write request to file
@@ -45,21 +49,17 @@ class UserApplication {
     int minutes = 1;
     final int secondsPerMinute = 60;
     long timeInterval = minutes * secondsPerMinute;
-    Echo.pstopRepeat(modem, echoCode + enter, timeInterval);
 
-    // Echo.generic(modem, echoCode);
+    // Echo.pstopRepeat(modem, echoCode + enter, timeInterval);
 
-    // Echo.generic(modem, gpsCode + "\r");
-    // Echo.generic(modem, gpsCode + "R=100011" + "\r");
+    //Image.get(modem, imageNoErrorCode + enter);
+    //Image.get(modem, imageWithErrorCode + enter);
 
-    // String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete + enter, 2);
-    // System.out.println("The GPS parameter " + maps_query);
+    String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete + enter, 2);
+    System.out.println("The GPS parameter " + maps_query);
     // Image.get(modem, gpsCode + maps_query + enter);
 
-    // Image.get(modem, imageNoErrorCode + enter);
-    // Image.get(modem, imageWithErrorCode + enter);
-
-    // ARQ.arqRepeat(modem, ackCode + enter, nackCode + enter, numPackets);
+    ARQ.arqRepeat(modem, ackCode + enter, nackCode + enter, timeInterval);
 
     modem.close();
   }

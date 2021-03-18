@@ -1,9 +1,19 @@
 package src;
 
 import ithakimodem.*;
+import java.io.File;
+import java.io.FileWriter;
 
 public class ARQ {
-  private static void run(Modem modem, String ackCode, String nackCode) {
+  /**
+   * Automatic repeat request
+   *
+   * @param modem
+   * @param ackCode
+   * @param nackCode
+   * @return The number of nack packets
+   */
+  private static Integer run(Modem modem, String ackCode, String nackCode) {
     System.out.println("\nARQ application...");
     Integer xorResult = 0, fcs = 0;
 
@@ -31,6 +41,7 @@ public class ARQ {
       }
     }
     System.out.println("Number of nack " + counter);
+    return counter;
   }
 
   private static Integer xorCharArray(char[] array) {
@@ -43,15 +54,38 @@ public class ARQ {
   }
 
   public static void arqRepeat(Modem modem, String ackCode, String nackCode,
-                               Integer numPackets) {
-    for (int i = 0; i < numPackets; i++) {
-      System.out.print("Packet No" + i + ": ");
+                               long timeInterval) {
+    float start = System.currentTimeMillis() / 1000f;
+    int ackCounter = 1, nackCounter = 0;
+    try (FileWriter arq = new FileWriter(new File("logs/arq.txt"))) {
+      while ((System.currentTimeMillis() / 1000f - start) < timeInterval) {
+        System.out.print("Packet No" + ackCounter + ": ");
 
-      long tic = System.currentTimeMillis();
-      ARQ.run(modem, ackCode, nackCode);
-      long toc = System.currentTimeMillis();
+        long tic = System.currentTimeMillis();
+        nackCounter += ARQ.run(modem, ackCode, nackCode);
+        long toc = System.currentTimeMillis();
 
-      System.out.println("Total time: " + (toc - tic) / 1000.0 + " (s)\n");
+        System.out.println("Total time: " + (toc - tic) / 1000.0 + " (s)\n");
+        ackCounter += 1;
+
+        arq.write((toc - tic) / 1000.0 + "\n");
+      }
+    } catch (Exception x) {
+      System.out.println(x);
     }
+
+    System.out.println("BER:" + berCalculation(ackCounter, nackCounter));
+  }
+
+  private static double berCalculation(int ackCounter, int nackCounter) {
+    float successProbability = ackCounter / (float)(nackCounter + ackCounter);
+    System.out.println("Success prob: " + successProbability * 100 + "%");
+    
+    final int numberOfEncodedChars = 16, bitsPerByte = 8; 
+    int bitsSequence = numberOfEncodedChars * bitsPerByte;
+    
+    double ber = 1 - Math.pow(successProbability, 1 / (float)bitsSequence);
+
+    return ber;
   }
 }
