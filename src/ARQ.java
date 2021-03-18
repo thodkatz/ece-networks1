@@ -12,6 +12,7 @@ public class ARQ {
     Integer counter = 0;
 
     while (true) {
+      // parse message to find the encoding sequence
       String[] parsedAck = message.split("\\s+");
       String encodedSequence =
           parsedAck[4].substring(1, parsedAck[4].length() - 1);
@@ -41,9 +42,16 @@ public class ARQ {
     return xorResult;
   }
 
-  public static void arqRepeat(Modem modem, String ackCode, String nackCode, Integer numPackets) {
+  public static void arqRepeat(Modem modem, String ackCode, String nackCode,
+                               Integer numPackets) {
     for (int i = 0; i < numPackets; i++) {
+      System.out.print("Packet No" + i + ": ");
+
+      long tic = System.currentTimeMillis();
       ARQ.run(modem, ackCode, nackCode);
+      long toc = System.currentTimeMillis();
+
+      System.out.println("Total time: " + (toc - tic) / 1000.0 + " (s)\n");
     }
   }
 }

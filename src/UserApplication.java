@@ -2,6 +2,7 @@ package src;
 
 import ithakimodem.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,34 +17,49 @@ class UserApplication {
 
     // Request codes
 
-    String echoCode = "E9434\r";
-    String imageNoErrorCode = "M0549\r";
-    String imageWithErrorCode = "G2532=PTZ\r";
-    String gpsCode = "P8521";
-    String gpsCodeComplete = gpsCode + "R=1000199\r";
-    String ackCode = "Q9743\r";
-    String nackCode = "R4960\r";
+    String echoCode = "E3346";
+    String imageNoErrorCode = "M2743";
+    String imageWithErrorCode = "G1890";
+    String gpsCode = "P4031";
+    String gpsCodeComplete = gpsCode + "R=6000199";
+    String ackCode = "Q6886";
+    String nackCode = "R9981";
+
+    String enter = "\r";
+
+    // write request to file
+    try (FileWriter requests = new FileWriter(new File("logs/requests.txt"))) {
+      requests.write("Echo: " + echoCode + "\n");
+      requests.write("Image No Error: " + imageNoErrorCode + "\n");
+      requests.write("Image Yes Error: " + imageWithErrorCode + "\n");
+      requests.write("GPS: " + gpsCode + "\n");
+      requests.write("GPS Full: " + gpsCodeComplete + "\n");
+      requests.write("ACK: " + ackCode + "\n");
+      requests.write("NACK: " + nackCode + "\n");
+    } catch (Exception x) {
+      System.out.println(x);
+    }
 
     // applications
 
-    int numPackets = 20;
-    Echo.pstopRepeat(modem, echoCode, numPackets);
+    int minutes = 1;
+    final int secondsPerMinute = 60;
+    long timeInterval = minutes * secondsPerMinute;
+    Echo.pstopRepeat(modem, echoCode + enter, timeInterval);
 
     // Echo.generic(modem, echoCode);
 
     // Echo.generic(modem, gpsCode + "\r");
     // Echo.generic(modem, gpsCode + "R=100011" + "\r");
 
-    // GPS.parser(modem, gpsCode + "\r");
-    // String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete, 2);
+    // String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete + enter, 2);
     // System.out.println("The GPS parameter " + maps_query);
-    // Image.get(modem, gpsCode + "T=225735403737T=225735403736T=225734403736T=225734403737T=225733403738T=225731403738" + "\r");
-    // Image.get(modem, gpsCode + maps_query + "\r");
-    
-    ARQ.arqRepeat(modem, ackCode, nackCode, numPackets);
+    // Image.get(modem, gpsCode + maps_query + enter);
 
-    // Image.get(modem, imageNoErrorCode);
-    // Image.get(modem, imageWithErrorCode);
+    // Image.get(modem, imageNoErrorCode + enter);
+    // Image.get(modem, imageWithErrorCode + enter);
+
+    // ARQ.arqRepeat(modem, ackCode + enter, nackCode + enter, numPackets);
 
     modem.close();
   }

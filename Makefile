@@ -1,6 +1,6 @@
 SRC = src/*.java
 
-$(shell mkdir -p classes)
+$(shell mkdir -p classes logs media)
 CLASSES = classes
 MAIN    = src.UserApplication
 

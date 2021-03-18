@@ -1,6 +1,6 @@
 # Compile
 
-Modify source file `src/UserApplication.java` updating the request codes taken by the Experimental Virtual Lab of the course's [website](ithaki.eng.auth.gr/netlab/).
+Modify source file `src/UserApplication.java` updating the request codes taken by the Experimental Virtual Lab of the course's [website](http://ithaki.eng.auth.gr/netlab/).
 
 TODO: Web scraping the request codes
 
@@ -12,4 +12,12 @@ make
 
 # GPS
 
-![gps](gps.jpg)
+![gps](media/gps.jpg)
+
+# Camera
+
+## Error-Free
+![image no error](media/image_error_free.jpg)
+
+## With-Erros
+![image yes error](media/image_with_errors.jpg)

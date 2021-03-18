@@ -1,6 +1,7 @@
 package src;
 import ithakimodem.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -80,16 +81,26 @@ public class Echo {
     System.out.println();
   }
 
-  public static void pstopRepeat(Modem modem, String code, int numPackets) {
-    for (int i = 0; i < numPackets; i++) {
-      System.out.print("Packet No" + i + ": ");
+  public static void pstopRepeat(Modem modem, String code, long timeInterval) {
+    float start = System.currentTimeMillis() / 1000f;
+    int counter = 0;
 
-      long tic = System.currentTimeMillis();
-      String message = Echo.pstop(modem, code);
-      System.out.println(message);
-      long toc = System.currentTimeMillis();
+    try (FileWriter echo = new FileWriter(new File("logs/echo.txt"))) {
+      while ((System.currentTimeMillis() / 1000f - start) < timeInterval) {
+        System.out.print("Packet No" + counter + ": ");
 
-      System.out.println("Total time: " + (toc - tic) / 1000.0 + " (s)\n");
+        long tic = System.currentTimeMillis();
+        String message = Echo.pstop(modem, code);
+        System.out.println(message);
+        long toc = System.currentTimeMillis();
+
+        System.out.println("Total time: " + (toc - tic) / 1000.0 + " (s)\n");
+        counter += 1;
+
+        echo.write((toc - tic) / 1000.0 + "\n");
+      }
+    } catch (Exception x) {
+      System.out.println(x);
     }
   }
 

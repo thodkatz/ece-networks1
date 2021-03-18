@@ -18,6 +18,7 @@ public class Image {
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     int returnValueModem = 0;
     byte first, second;
+    
     long tic = System.currentTimeMillis();
 
     modem.write(code.getBytes());
@@ -48,7 +49,16 @@ public class Image {
 
     // write image file
 
-    String path = code.substring(0, 1).equals("P") ? "gps.jpg" : "image.jpg";
+    String path = "";
+    if (code.substring(0, 1).equals("P"))
+      path = "media/gps.jpg";
+    else if (code.substring(0, 1).equals("M"))
+      path = "media/image_error_free.jpg";
+    else if (code.substring(0, 1).equals("G"))
+      path = "media/image_with_errors.jpg";
+    else
+      path = "image.jpg";
+
     File image = new File(path);
     try (FileOutputStream fos = new FileOutputStream(image)) {
       fos.write(dataImage);
