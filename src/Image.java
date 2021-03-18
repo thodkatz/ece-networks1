@@ -13,7 +13,7 @@ public class Image {
    * @param code Image request code
    */
   public static void get(Modem modem, String code) {
-    System.out.println("\nImage application");
+    System.out.println("\nImage application...");
 
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     int returnValueModem = 0;
@@ -46,7 +46,9 @@ public class Image {
     }
     byte[] dataImage = buffer.toByteArray();
 
-    String path = "image.jpg";
+    // write image file
+
+    String path = code.substring(0, 1).equals("P") ? "gps.jpg" : "image.jpg";
     File image = new File(path);
     try (FileOutputStream fos = new FileOutputStream(image)) {
       fos.write(dataImage);

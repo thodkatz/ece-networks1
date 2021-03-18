@@ -32,7 +32,6 @@ public class GPS {
         System.out.println(x);
       }
     }
-    System.out.println();
 
     return coordinates;
   }
@@ -40,8 +39,9 @@ public class GPS {
   /**
    * Create a formated string merging gps data points
    */
-  public static String stringDataPoints(Modem modem, String code,
-                                        int numPoints) {
+  public static String mergeDataPoints(Modem modem, String code,
+                                       int numPoints) {
+    System.out.println("Creating GPS parameter special format...");
     String finalPoints = "";
     String[] adjust_coords = {"", ""};
 
@@ -52,10 +52,9 @@ public class GPS {
 
     coordinates = parser(modem, code);
 
+    // adjust to degrees, minutes, seconds
     for (int i = 0; i < coordinates.size(); i++) {
       if (!(i % 3 == 0)) {
-        // adjust to degrees, minutes, seconds
-
         String lat_long = coordinates.get(i);
 
         String hour =
@@ -88,7 +87,7 @@ public class GPS {
     for (Integer i : indices) {
       timestamps.add(coordinates.get(i * 3));
     }
-    System.out.println(timestamps);
+    // System.out.println(timestamps);
 
     return finalPoints;
   }
@@ -107,7 +106,7 @@ public class GPS {
     String parsedString = "";
 
     // exclude "T=" and find unique data points
-    for (int i = 0; i < coordinates.size(); i++)  {
+    for (int i = 0; i < coordinates.size(); i++) {
       if (!filtered.contains(coordinates.get(i))) {
         filtered.add(coordinates.get(i));
         indices.add(i);

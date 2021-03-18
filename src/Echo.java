@@ -11,19 +11,20 @@ public class Echo {
    * @param modem The virtual opened modem
    * @param code Echo request code
    */
-  public static void pstop(Modem modem, String code) {
+  public static String pstop(Modem modem, String code) {
     // System.out.println("Echo application");
 
     char first, second = ' ';
+    String message = "";
 
     modem.write(code.getBytes());
     first = (char)modem.read();
-    System.out.print(first);
-
+    message += first;
+    
     while (true) {
       try {
         second = (char)modem.read();
-        System.out.print(second);
+        message += second;
 
         // all the echo packets ends to "PSTOP"
         // check if message ending "OP" (cheat yep) to avoid waiting for
@@ -37,7 +38,8 @@ public class Echo {
         System.out.println(x);
       }
     }
-    System.out.println();
+
+    return message;
   }
 
   /**

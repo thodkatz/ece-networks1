@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 class UserApplication {
   public static void main(String[] args) {
-    // printWelcome();
+    printWelcome();
 
     Modem modem = new Modem();
     int speed = 80_000, timeout = 2_000;
@@ -16,17 +16,17 @@ class UserApplication {
 
     // Request codes
 
-    String echoCode = "E8779\r";
-    String imageNoErrorCode = "M5849\r";
-    String imageWithErrorCode = "G2640=PTZ\r";
-    String gpsCode = "P1678";
-    String gpsCodeComplete = gpsCode + "R=6000199\r";
-    String ackCode = "Q7087\r";
-    String nackCode = "R1556\r";
+    String echoCode = "E9434\r";
+    String imageNoErrorCode = "M0549\r";
+    String imageWithErrorCode = "G2532=PTZ\r";
+    String gpsCode = "P8521";
+    String gpsCodeComplete = gpsCode + "R=1000199\r";
+    String ackCode = "Q9743\r";
+    String nackCode = "R4960\r";
 
     // applications
 
-    // int numPackets = 5;
+    int numPackets = 10;
     // Echo.pstopRepeat(modem, echoCode, numPackets);
 
     // Echo.generic(modem, echoCode);
@@ -35,13 +35,12 @@ class UserApplication {
     // Echo.generic(modem, gpsCode + "R=100011" + "\r");
 
     // GPS.parser(modem, gpsCode + "\r");
-    String maps_query = GPS.stringDataPoints(modem, gpsCodeComplete, 2);
-    System.out.println(maps_query);
+    String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete, 2);
+    System.out.println("The GPS parameter " + maps_query);
     // Image.get(modem, gpsCode + "T=225735403737T=225735403736T=225734403736T=225734403737T=225733403738T=225731403738" + "\r");
-    Image.get(modem, gpsCode + maps_query + "\r");
+    // Image.get(modem, gpsCode + maps_query + "\r");
     
-    // Echo.generic(modem, ackCode);
-    // Echo.generic(modem, nackCode);
+    ARQ.arqRepeat(modem, ackCode, nackCode, numPackets);
 
     // Image.get(modem, imageNoErrorCode);
     // Image.get(modem, imageWithErrorCode);
