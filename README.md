@@ -12,12 +12,12 @@ make
 
 # GPS
 
-![gps](media/gps.jpg)
+![gps](media/session1/gps.jpg)
 
 # Camera
 
 ## Error-Free
-![image no error](media/image_error_free.jpg)
+![image no error](media/session2/image_error_free_fix.jpg)
 
 ## With-Erros
-![image yes error](media/image_with_errors.jpg)
+![image yes error](media/session2/image_with_errors_fix.jpg)

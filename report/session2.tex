@@ -1,0 +1,125 @@
+% !TEX program = xelatex
+
+\documentclass[hidelinks, 12pt, a4paper]{article}
+
+\usepackage{fontspec}
+\setmainfont[Ligatures=TeX]{Linux Libertine O}
+
+\usepackage[hidelinks, colorlinks = true, urlcolor = blue]{hyperref}
+
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{lipsum}
+
+\graphicspath{{../logs/session2}{../media/session2}}
+
+
+\begin{document}
+
+\input{titlepage}
+%\maketitle
+
+
+\pagebreak
+{
+\renewcommand*\contentsname{Περιεχόμενα}
+\hypersetup{linkcolor=black}
+\tableofcontents
+}
+\pagebreak
+
+% \section{Lorem}
+% \lipsum
+
+\section{Settings}
+
+Οι ρυθμίσεις του virtual modem ήταν οι ακόλουθες:
+\[speed = 80.000 \quad (bps)\]
+
+\section{G1}
+
+\begin{figure}[h!]
+\centering
+	\includegraphics[keepaspectratio, width=.7\textwidth]{echo.png}
+	\caption{11/04/2021 03:00:33 "E3905"} 
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+	\includegraphics[keepaspectratio, width=.7\textwidth]{hist_echo.png}
+	\caption{Ιστόγραμμα echo packets \\ 11/04/2021 03:00:33 "E3905"} 
+\end{figure}
+
+\pagebreak
+
+\section{G2}
+
+\begin{figure}[h!]
+\centering
+	\includegraphics[keepaspectratio, width=.8\textwidth]{arq.png}
+	\caption{11/04/2021 03:00:33 ACK: "Q6094" NACK: "R6506"} 
+\end{figure}
+
+
+\section{G3}
+
+\begin{figure}[h!]
+\centering
+	\includegraphics[keepaspectratio, width=.8\textwidth]{hist_arq.png}
+	\caption{11/04/2021 03:00:33 ACK: "Q6094" NACK: "R6506"} 
+\end{figure}
+
+\pagebreak
+
+\section{E1}
+
+\begin{figure}[h!]
+     \begin{subfigure}[b]{0.5\textwidth}
+         \centering
+         \includegraphics[keepaspectratio, width=\textwidth]{image_error_free_fix.jpg}
+         \caption{CAM=FIX \\ 11/04/2021 03:00:33 "M5179"}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.5\textwidth}
+         \centering
+         \includegraphics[keepaspectratio, width=\textwidth]{image_error_free_ptz.jpg}
+         \caption{CAM=PTZ \\ 11/04/2021 03:00:33 "M5179"}
+     \end{subfigure}
+     \caption{Εικόνες δίχως θόρυβο}
+\end{figure}
+
+
+\section{E2}
+
+\begin{figure}[h!]
+     \begin{subfigure}[b]{0.5\textwidth}
+         \centering
+         \includegraphics[keepaspectratio, width=\textwidth]{image_with_errors_fix.jpg}
+         \caption{CAM=FIX \\ 11/04/2021 03:00:33 "G7717"}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.5\textwidth}
+         \centering
+         \includegraphics[keepaspectratio, width=\textwidth]{image_with_errors_ptz.jpg}
+         \caption{CAM=PTZ \\ 11/04/2021 03:00:33 "G7717"}
+     \end{subfigure}
+     \caption{Εικόνες με θόρυβο}
+\end{figure}
+
+\pagebreak
+
+\section{M1}
+
+\begin{figure}[h!]
+\centering
+	\includegraphics[keepaspectratio, width=.8\textwidth]{gps.jpg}
+    \caption{11/04/2021 03:00:33 "P1848" \\ "P1848R=1000099"} 
+\end{figure}
+
+
+\section{Bit error rate}
+
+\[BER = 0.0028170581887710933\]
+
+\end{document}

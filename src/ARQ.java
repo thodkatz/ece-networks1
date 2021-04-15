@@ -57,18 +57,22 @@ public class ARQ {
                                long timeInterval) {
     float start = System.currentTimeMillis() / 1000f;
     int ackCounter = 1, nackCounter = 0;
-    try (FileWriter arq = new FileWriter(new File("logs/arq.txt"))) {
+    try (FileWriter arq = new FileWriter(new File("logs/arq.txt"));
+         FileWriter arqNack = new FileWriter(new File("logs/arqNack.txt"))) {
       while ((System.currentTimeMillis() / 1000f - start) < timeInterval) {
         System.out.print("Packet No" + ackCounter + ": ");
+        int nackCounterPerPacket = 0;
 
         long tic = System.currentTimeMillis();
-        nackCounter += ARQ.run(modem, ackCode, nackCode);
+        nackCounterPerPacket = ARQ.run(modem, ackCode, nackCode);
+        nackCounter += nackCounterPerPacket;
         long toc = System.currentTimeMillis();
 
-        System.out.println("Total time: " + (toc - tic) / 1000.0 + " (s)\n");
+        System.out.println("Total time: " + (toc - tic) + " (ms)\n");
         ackCounter += 1;
 
-        arq.write((toc - tic) / 1000.0 + "\n");
+        arq.write((toc - tic) + "\n");
+        arqNack.write(nackCounterPerPacket + "\n");
       }
     } catch (Exception x) {
       System.out.println(x);

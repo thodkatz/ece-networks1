@@ -3,7 +3,7 @@ package src;
 import ithakimodem.*;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 class UserApplication {
@@ -17,18 +17,18 @@ class UserApplication {
 
     // Request codes
 
-    String echoCode = "E3634";
-    String imageNoErrorCode = "M6645";
-    String imageWithErrorCode = "G9639";
-    String gpsCode = "P1604";
+    String echoCode = "E6777";
+    String imageNoErrorCode = "M0050";
+    String imageWithErrorCode = "G0990";
+    String gpsCode = "P0846";
     String gpsCodeComplete = gpsCode + "R=1000099";
-    String ackCode = "Q4029";
-    String nackCode = "R1128";
+    String ackCode = "Q4219";
+    String nackCode = "R9877";
 
-    String cameraSuffix = "CAM=FIX";
-    String directionSuffix = "DIR=L";
-    imageNoErrorCode += cameraSuffix;
-    imageWithErrorCode += cameraSuffix;
+    //String cameraSuffix = "CAM=FIX";
+    //String directionSuffix = "DIR=L";
+    //imageNoErrorCode += cameraSuffix;
+    //imageWithErrorCode += cameraSuffix;
     String enter = "\r";
 
     // write request to file
@@ -40,26 +40,30 @@ class UserApplication {
       requests.write("GPS Full: " + gpsCodeComplete + "\n");
       requests.write("ACK: " + ackCode + "\n");
       requests.write("NACK: " + nackCode + "\n");
+      requests.write("Time start: " + new Date());
     } catch (Exception x) {
       System.out.println(x);
     }
 
     // applications
 
-    int minutes = 1;
+    int minutes = 4;
     final int secondsPerMinute = 60;
     long timeInterval = minutes * secondsPerMinute;
 
-    // Echo.pstopRepeat(modem, echoCode + enter, timeInterval);
+    //Echo.pstopRepeat(modem, echoCode + enter, timeInterval);
 
-    //Image.get(modem, imageNoErrorCode + enter);
-    //Image.get(modem, imageWithErrorCode + enter);
+    Image.get(modem, imageNoErrorCode + enter);
+    Image.get(modem, imageWithErrorCode + enter);
 
-    String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete + enter, 2);
-    System.out.println("The GPS parameter " + maps_query);
-    // Image.get(modem, gpsCode + maps_query + enter);
+    Image.get(modem, imageNoErrorCode + "CAM=PTZ"+ enter);
+    Image.get(modem, imageWithErrorCode + "CAM=PTZ" + enter);
 
-    ARQ.arqRepeat(modem, ackCode + enter, nackCode + enter, timeInterval);
+    //String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete + enter, 2);
+    //System.out.println("The GPS parameter " + maps_query);
+    //Image.get(modem, gpsCode + maps_query + enter);
+
+    //ARQ.arqRepeat(modem, ackCode + enter, nackCode + enter, timeInterval);
 
     modem.close();
   }

@@ -32,8 +32,8 @@ public class Image {
         second = int0(returnValueModem);
         buffer.write(second);
 
-        // System.out.print(String.format("%02X", first));
-        // System.out.print(String.format("%02X", second));
+        System.out.print(String.format("%02X", first));
+        System.out.print(String.format("%02X", second));
 
         if ((String.format("%02X", first).equals("FF")) &&
             (String.format("%02X", second)).equals("D9"))

@@ -94,10 +94,10 @@ public class Echo {
         System.out.println(message);
         long toc = System.currentTimeMillis();
 
-        System.out.println("Total time: " + (toc - tic) / 1000.0 + " (s)\n");
+        System.out.println("Total time: " + (toc - tic) + " (ms)\n");
         counter += 1;
 
-        echo.write((toc - tic) / 1000.0 + "\n");
+        echo.write((toc - tic) + "\n");
       }
     } catch (Exception x) {
       System.out.println(x);
