@@ -1,0 +1,11 @@
+Echo:  E3905
+Image No Error: M5179
+Image Yes Error: G7717
+GPS: P1848
+GPS Full: P1848R=1000099
+ACK: Q6094
+NACK: R6506
+Time start: Sun Apr 11 21:32:45 EEST 2021
+
+BER:0.0028170581887710933
+Success prob: 69.69147%

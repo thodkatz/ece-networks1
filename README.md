@@ -17,7 +17,7 @@ make
 # Camera
 
 ## Error-Free
-![image no error](media/session2/image_error_free_fix.jpg)
+![image no error](media/session1/image_error_free_fix.jpg)
 
 ## With-Erros
-![image yes error](media/session2/image_with_errors_fix.jpg)
+![image yes error](media/session1/image_with_errors_fix.jpg)

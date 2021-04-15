@@ -17,13 +17,13 @@ class UserApplication {
 
     // Request codes
 
-    String echoCode = "E6777";
+    String echoCode = "E9851";
     String imageNoErrorCode = "M0050";
     String imageWithErrorCode = "G0990";
-    String gpsCode = "P0846";
+    String gpsCode = "P7700";
     String gpsCodeComplete = gpsCode + "R=1000099";
-    String ackCode = "Q4219";
-    String nackCode = "R9877";
+    String ackCode = "Q8321";
+    String nackCode = "R5328";
 
     //String cameraSuffix = "CAM=FIX";
     //String directionSuffix = "DIR=L";
@@ -51,7 +51,7 @@ class UserApplication {
     final int secondsPerMinute = 60;
     long timeInterval = minutes * secondsPerMinute;
 
-    //Echo.pstopRepeat(modem, echoCode + enter, timeInterval);
+    Echo.pstopRepeat(modem, echoCode + enter, timeInterval);
 
     Image.get(modem, imageNoErrorCode + enter);
     Image.get(modem, imageWithErrorCode + enter);
@@ -59,11 +59,11 @@ class UserApplication {
     Image.get(modem, imageNoErrorCode + "CAM=PTZ"+ enter);
     Image.get(modem, imageWithErrorCode + "CAM=PTZ" + enter);
 
-    //String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete + enter, 2);
-    //System.out.println("The GPS parameter " + maps_query);
-    //Image.get(modem, gpsCode + maps_query + enter);
+    String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete + enter, 2);
+    System.out.println("The GPS parameter " + maps_query);
+    Image.get(modem, gpsCode + maps_query + enter);
 
-    //ARQ.arqRepeat(modem, ackCode + enter, nackCode + enter, timeInterval);
+    ARQ.arqRepeat(modem, ackCode + enter, nackCode + enter, timeInterval);
 
     modem.close();
   }
