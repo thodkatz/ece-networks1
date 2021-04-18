@@ -1,0 +1,11 @@
+Echo: E0838
+Image No Error: M8687
+Image Yes Error: G1618
+GPS: P3510
+GPS Full: P3510R=1000099
+ACK: Q1589
+NACK: R9523
+Time start: Sun Apr 18 14:57:32 EEST 2021
+
+Success prob: 67.886024%
+BER:0.00302151969812825

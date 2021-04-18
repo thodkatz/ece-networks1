@@ -17,13 +17,13 @@ class UserApplication {
 
     // Request codes
 
-    String echoCode = "E9851";
-    String imageNoErrorCode = "M0050";
-    String imageWithErrorCode = "G0990";
-    String gpsCode = "P7700";
+    String echoCode = "E0838";
+    String imageNoErrorCode = "M8687";
+    String imageWithErrorCode = "G1618";
+    String gpsCode = "P3510";
     String gpsCodeComplete = gpsCode + "R=1000099";
-    String ackCode = "Q8321";
-    String nackCode = "R5328";
+    String ackCode = "Q1589";
+    String nackCode = "R9523";
 
     //String cameraSuffix = "CAM=FIX";
     //String directionSuffix = "DIR=L";
