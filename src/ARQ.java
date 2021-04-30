@@ -84,10 +84,10 @@ public class ARQ {
   private static double berCalculation(int ackCounter, int nackCounter) {
     float successProbability = ackCounter / (float)(nackCounter + ackCounter);
     System.out.println("Success prob: " + successProbability * 100 + "%");
-    
-    final int numberOfEncodedChars = 16, bitsPerByte = 8; 
+
+    final int numberOfEncodedChars = 16, bitsPerByte = 8;
     int bitsSequence = numberOfEncodedChars * bitsPerByte;
-    
+
     double ber = 1 - Math.pow(successProbability, 1 / (float)bitsSequence);
 
     return ber;

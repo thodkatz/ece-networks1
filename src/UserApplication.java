@@ -4,6 +4,7 @@ import ithakimodem.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 class UserApplication {
@@ -15,21 +16,24 @@ class UserApplication {
     setupModem(modem, speed, timeout);
     startModem(modem, false);
 
-    // Request codes
+    // Web scraping request codes
+    String[] codes = WebScraping.getCodes();
 
-    String echoCode = "E0838";
-    String imageNoErrorCode = "M8687";
-    String imageWithErrorCode = "G1618";
-    String gpsCode = "P3510";
+    String echoCode = codes[0];
+    String imageNoErrorCode = codes[1];
+    String imageWithErrorCode = codes[2];
+    String gpsCode = codes[3];
     String gpsCodeComplete = gpsCode + "R=1000099";
-    String ackCode = "Q1589";
-    String nackCode = "R9523";
-
-    //String cameraSuffix = "CAM=FIX";
-    //String directionSuffix = "DIR=L";
-    //imageNoErrorCode += cameraSuffix;
-    //imageWithErrorCode += cameraSuffix;
+    String ackCode = codes[4];
+    String nackCode = codes[5];
     String enter = "\r";
+
+    // optional suffix
+
+    // String cameraSuffix = "CAM=FIX";
+    // String directionSuffix = "DIR=L";
+    // imageNoErrorCode += cameraSuffix;
+    // imageWithErrorCode += cameraSuffix;
 
     // write request to file
     try (FileWriter requests = new FileWriter(new File("logs/requests.txt"))) {
@@ -45,9 +49,10 @@ class UserApplication {
       System.out.println(x);
     }
 
-    // applications
+    // run applications
 
-    int minutes = 4;
+    // specify time interval collectiing data
+    int minutes = 1;
     final int secondsPerMinute = 60;
     long timeInterval = minutes * secondsPerMinute;
 
@@ -56,9 +61,11 @@ class UserApplication {
     Image.get(modem, imageNoErrorCode + enter);
     Image.get(modem, imageWithErrorCode + enter);
 
-    Image.get(modem, imageNoErrorCode + "CAM=PTZ"+ enter);
+    // switch camera
+    Image.get(modem, imageNoErrorCode + "CAM=PTZ" + enter);
     Image.get(modem, imageWithErrorCode + "CAM=PTZ" + enter);
 
+    // collect gps data points and rendering
     String maps_query = GPS.mergeDataPoints(modem, gpsCodeComplete + enter, 2);
     System.out.println("The GPS parameter " + maps_query);
     Image.get(modem, gpsCode + maps_query + enter);
@@ -90,9 +97,6 @@ class UserApplication {
           System.out.print(returnCharModem);
           Thread.sleep(10);
         }
-
-        // check for breaking flag
-        // if (returnValueModem == finishReadingFlag) break;
 
         // check for breaking sequence
         if ((returnCharModem == finishReadingString[finishCounter])) {

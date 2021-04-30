@@ -87,7 +87,7 @@ public class GPS {
       timestamps.add(coordinates.get(i * 3));
     }
 
-    try (FileWriter time = new FileWriter(new File("logs/gps_timstamps"))) {
+    try (FileWriter time = new FileWriter(new File("logs/gps_timstamps.txt"))) {
       for (String string : timestamps) {
         time.write(string + "\n");
       }
@@ -141,8 +141,6 @@ public class GPS {
         System.out.println(x);
       }
     }
-
     return line;
   }
-
 }

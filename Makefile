@@ -7,12 +7,15 @@ MAIN    = src.UserApplication
 all: build run
 
 build: $(SRC)
-	javac -cp lib/ithakimodem.jar -d $(CLASSES) $^
+	javac -cp .:lib/* -d $(CLASSES) $^
 
 run:
-	@java -cp $(CLASSES):lib/ithakimodem.jar $(MAIN)
+	@java -cp $(CLASSES):lib/* $(MAIN)
 
 .PHONY: clean
 
 clean:
 	rm -rf $(CLASSES)/*
+
+clean_logs:
+	rm -f media/*.jpg logs/*.txt
